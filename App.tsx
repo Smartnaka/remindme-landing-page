@@ -10,7 +10,6 @@ import FAQ from './components/FAQ';
 import TrustStory from './components/TrustStory';
 import FinalCTA from './components/CTA';
 import Footer from './components/Footer';
-import Chatbot from './components/Chatbot';
 
 const App: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState(true);
@@ -40,7 +39,6 @@ const App: React.FC = () => {
         <FAQ />
         <FinalCTA />
       </main>
-      <Chatbot />
       <Footer />
     </div>
   );
