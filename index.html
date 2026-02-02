@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
       body {
         font-family: 'Inter', sans-serif;
@@ -26,6 +26,9 @@
       .animate-float {
         animation: float 4s ease-in-out infinite;
       }
+      @keyframes shimmer {
+        100% { transform: translateX(100%); }
+      }
       @keyframes pulse-glow {
         0%, 100% { box-shadow: 0 0 30px rgba(52, 199, 89, 0.1); }
         50% { box-shadow: 0 0 60px rgba(52, 199, 89, 0.3); }
@@ -34,11 +37,10 @@
         animation: pulse-glow 3s ease-in-out infinite;
       }
       
-      /* Scroll Reveal Classes */
       .reveal {
         opacity: 0;
-        transform: translateY(30px);
-        transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        transform: translateY(40px);
+        transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
       }
       .reveal.active {
         opacity: 1;
@@ -49,13 +51,21 @@
         perspective: 1000px;
       }
 
-      /* Hide scrollbar but keep functionality */
       .no-scrollbar::-webkit-scrollbar {
         display: none;
       }
       .no-scrollbar {
         -ms-overflow-style: none;
         scrollbar-width: none;
+      }
+
+      /* Custom animations for chatbot and shimmer */
+      @keyframes slideInUp {
+        from { transform: translateY(100%); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+      .animate-in {
+        animation-fill-mode: forwards;
       }
     </style>
     <script>
@@ -93,7 +103,8 @@
     "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
     "react/": "https://esm.sh/react@^19.2.4/",
     "react": "https://esm.sh/react@^19.2.4",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/"
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.39.0"
   }
 }
 </script>
@@ -101,10 +112,7 @@
   <body>
     <div id="root"></div>
     <script>
-      // Simple Scroll Reveal Observer
-      const observerOptions = {
-        threshold: 0.1
-      };
+      const observerOptions = { threshold: 0.15 };
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -113,19 +121,14 @@
         });
       }, observerOptions);
 
-      // We'll need to run this after React renders
       window.addEventListener('load', () => {
         const reveals = document.querySelectorAll('.reveal');
         reveals.forEach(el => observer.observe(el));
       });
       
-      // Also observe dynamically if needed
-      const observerInterval = setInterval(() => {
+      setInterval(() => {
         const reveals = document.querySelectorAll('.reveal:not(.active)');
         reveals.forEach(el => observer.observe(el));
-        if (reveals.length === 0) {
-          // Optional: clear interval if all observed
-        }
       }, 1000);
     </script>
   </body>

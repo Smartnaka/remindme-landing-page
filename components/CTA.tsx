@@ -1,61 +1,53 @@
 
 import React, { useState, useEffect } from 'react';
-import { Loader2, CheckCircle2, PartyPopper } from 'lucide-react';
+import { Loader2, CheckCircle2, PartyPopper, Users } from 'lucide-react';
 
 const FinalCTA: React.FC = () => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [count, setCount] = useState(1248);
 
-  // Check if they already joined in a previous session
   useEffect(() => {
     const hasJoined = localStorage.getItem('remindme_waitlist_joined');
     if (hasJoined) {
       setSubmitted(true);
     }
+
+    const interval = setInterval(() => {
+      if (Math.random() > 0.7) {
+        setCount(prev => prev + 1);
+      }
+    }, 4000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-
     setLoading(true);
-
-    try {
-      /** 
-       * PRODUCTION TIP: 
-       * You would typically use fetch() here:
-       * 
-       * await fetch('https://your-api.com/waitlist', {
-       *   method: 'POST',
-       *   body: JSON.stringify({ email }),
-       *   headers: { 'Content-Type': 'application/json' }
-       * });
-       */
-      
-      // Simulating a real network delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      localStorage.setItem('remindme_waitlist_joined', 'true');
-      setSubmitted(true);
-      setEmail('');
-    } catch (error) {
-      console.error("Waitlist error:", error);
-      alert("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    localStorage.setItem('remindme_waitlist_joined', 'true');
+    setSubmitted(true);
+    setEmail('');
+    setLoading(false);
   };
 
   return (
     <section id="cta" className="py-24 reveal">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-brand-light dark:bg-brand-dark rounded-[3.5rem] p-12 md:p-24 text-center text-white relative overflow-hidden shadow-[0_40px_100px_-20px_rgba(52,199,89,0.3)]">
-          {/* Decorative accents */}
           <div className="absolute top-0 right-0 w-80 h-80 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
           <div className="absolute bottom-0 left-0 w-80 h-80 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
           
           <div className="relative z-10 max-w-2xl mx-auto">
+            {!submitted && (
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md mb-8 text-sm font-bold border border-white/20">
+                <Users className="w-4 h-4" />
+                <span>Join {count.toLocaleString()}+ students already waiting</span>
+              </div>
+            )}
+
             {submitted ? (
               <div className="bg-white/10 backdrop-blur-xl p-8 md:p-12 rounded-[2.5rem] border border-white/20 flex flex-col items-center animate-float">
                 <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mb-6 shadow-xl">
@@ -74,7 +66,7 @@ const FinalCTA: React.FC = () => {
               <>
                 <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">Stay on top of your lectures.</h2>
                 <p className="text-lg md:text-xl text-white/90 mb-10 font-medium leading-relaxed">
-                  Join 500+ students waiting for the smartest way to manage their university schedule.
+                  The smartest way to manage your university schedule. Minimal stress, maximum focus.
                 </p>
                 
                 <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 group">
@@ -85,25 +77,18 @@ const FinalCTA: React.FC = () => {
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="Enter your university email"
                       required
-                      disabled={loading}
-                      className="w-full px-8 py-5 rounded-2xl text-light-textPrimary focus:outline-none focus:ring-4 focus:ring-white/30 text-lg transition-all placeholder:text-light-textSecondary/50"
+                      className="w-full px-8 py-5 rounded-2xl text-light-textPrimary focus:outline-none focus:ring-4 focus:ring-white/30 text-lg transition-all"
                     />
                   </div>
                   <button 
                     type="submit"
                     disabled={loading}
-                    className="bg-light-textPrimary text-white font-bold px-10 py-5 rounded-2xl hover:bg-black active:scale-95 transition-all shrink-0 text-lg flex items-center justify-center min-w-[200px] shadow-lg"
+                    className="bg-light-textPrimary text-white font-bold px-10 py-5 rounded-2xl hover:bg-black active:scale-95 transition-all shrink-0 text-lg flex items-center justify-center min-w-[200px] shadow-lg relative overflow-hidden group"
                   >
-                    {loading ? (
-                      <Loader2 className="w-6 h-6 animate-spin" />
-                    ) : (
-                      "Join the Waitlist"
-                    )}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
+                    {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Join the Waitlist"}
                   </button>
                 </form>
-                <p className="mt-8 text-sm text-white/70 font-medium">
-                  Privacy first. We only use your email for app updates.
-                </p>
               </>
             )}
           </div>
