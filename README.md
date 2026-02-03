@@ -1,4 +1,4 @@
-# 📅 Remindme — Never Miss a Lecture Again
+
 
 **Remindme** is a premium, high-performance landing page for a student-focused utility app designed specifically for Nigerian university campuses. Built with a focus on minimalist UI/UX and high conversion, it solves the chaos of managing academic schedules in a fast-paced environment.
 
